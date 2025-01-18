@@ -3,7 +3,7 @@ export const validateInterview = (formData, interviews, isEdit) => {
     const errors = {};
     const { candidateName, interviewerName, date, timeSlot } = formData;
   
-    // Check for overlapping interviews for the same interviewer
+ 
     const interviewerConflict = interviews.find(i => 
       i.interviewerName === interviewerName &&
       i.date === date &&
@@ -15,7 +15,7 @@ export const validateInterview = (formData, interviews, isEdit) => {
       errors.interviewerName = 'Interviewer is already booked for this time slot.';
     }
   
-    // Check for overlapping interviews for the same candidate
+  
     const candidateConflict = interviews.find(i => 
       i.candidateName === candidateName &&
       i.date === date &&

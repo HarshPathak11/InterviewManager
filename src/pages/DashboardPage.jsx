@@ -1,10 +1,10 @@
-// src/pages/DashboardPage.jsx
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { deleteInterview } from '../redux/interviewsSlice';
 import { Link } from 'react-router-dom';
 import Notification from '../components/Notification/Notification';
+import CalendarView from '../components/DashBoard/CalendarView';
 
 const Container = styled.div`
   padding: 2rem;
@@ -62,8 +62,41 @@ const Button = styled.button`
   }
 `;
 
+const ToggleButton = styled.button`
+  position: relative;
+  background: ${props => (props.active ? '#4a90e2' : '#e74c3c')};
+  color: #fff;
+  border: none;
+  padding: 0.5rem 2.5rem;
+  border-radius: 30px;
+  cursor: pointer;
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.4s ease, transform 0.2s ease;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+
+`;
+
+const ToggleCircle = styled.div`
+  position: absolute;
+  top: 50%;
+  left: ${props => (props.active ? 'calc(100% - 2rem)' : '0.5rem')};
+  transform: translateY(-50%);
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.4s ease;
+`;
+
 const DashboardPage = () => {
   const dispatch = useDispatch();
+  const [view, setView] = useState("list");
   const interviews = useSelector(state => state.interviews.interviews);
   const [filters, setFilters] = useState({
     date: '',
@@ -94,7 +127,7 @@ const DashboardPage = () => {
 
   return (
     <Container>
-    {notification && (
+      {notification && (
         <Notification
           message={notification.message}
           type={notification.type}
@@ -102,64 +135,76 @@ const DashboardPage = () => {
         />
       )}
       <h2>Scheduled Interviews</h2>
-      <Filters>
-        <input
-          type="date"
-          name="date"
-          value={filters.date}
-          onChange={handleFilterChange}
-          placeholder="Filter by Date"
-        />
-        <input
-          type="text"
-          name="interviewer"
-          value={filters.interviewer}
-          onChange={handleFilterChange}
-          placeholder="Filter by Interviewer"
-        />
-        <input
-          type="text"
-          name="candidate"
-          value={filters.candidate}
-          onChange={handleFilterChange}
-          placeholder="Filter by Candidate"
-        />
-      </Filters>
-      <InterviewList>
-        <thead>
-          <tr>
-            <th>Candidate Name</th>
-            <th>Interviewer Name</th>
-            <th>Date</th>
-            <th>Time Slot</th>
-            <th>Interview Type</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredInterviews.length > 0 ? (
-            filteredInterviews.map(interview => (
-              <tr key={interview.id}>
-                <td>{interview.candidateName}</td>
-                <td>{interview.interviewerName}</td>
-                <td>{interview.date}</td>
-                <td>{interview.timeSlot}</td>
-                <td>{interview.interviewType}</td>
-                <td>
-                  <Link to={`/edit/${interview.id}`}>
-                    <Button>Edit</Button>
-                  </Link>
-                  <Button delete onClick={() => handleDelete(interview.id)}>Delete</Button>
-                </td>
+      <ToggleButton
+        active={view === "cal"}
+        onClick={() => setView(view === "list" ? "cal" : "list")}
+      >
+        <ToggleCircle active={view === "cal"} />
+        {view === "list" ? "List View" : "Calendar View"}
+      </ToggleButton>
+      {view === "list" && (
+        <>
+          <Filters>
+            <input
+              type="date"
+              name="date"
+              value={filters.date}
+              onChange={handleFilterChange}
+              placeholder="Filter by Date"
+            />
+            <input
+              type="text"
+              name="interviewer"
+              value={filters.interviewer}
+              onChange={handleFilterChange}
+              placeholder="Filter by Interviewer"
+            />
+            <input
+              type="text"
+              name="candidate"
+              value={filters.candidate}
+              onChange={handleFilterChange}
+              placeholder="Filter by Candidate"
+            />
+          </Filters>
+          <InterviewList>
+            <thead>
+              <tr>
+                <th>Candidate Name</th>
+                <th>Interviewer Name</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Interview Type</th>
+                <th>Actions</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="6" style={{ textAlign: 'center' }}>No interviews scheduled.</td>
-            </tr>
-          )}
-        </tbody>
-      </InterviewList>
+            </thead>
+            <tbody>
+              {filteredInterviews.length > 0 ? (
+                filteredInterviews.map(interview => (
+                  <tr key={interview.id}>
+                    <td>{interview.candidateName}</td>
+                    <td>{interview.interviewerName}</td>
+                    <td>{interview.date}</td>
+                    <td>{interview.timeSlot}</td>
+                    <td>{interview.interviewType}</td>
+                    <td>
+                      <Link to={`/edit/${interview.id}`}>
+                        <Button>Edit</Button>
+                      </Link>
+                      <Button delete onClick={() => handleDelete(interview.id)}>Delete</Button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: 'center' }}>No interviews scheduled.</td>
+                </tr>
+              )}
+            </tbody>
+          </InterviewList>
+        </>
+      )}
+      {view === "cal" && <CalendarView />}
     </Container>
   );
 };
