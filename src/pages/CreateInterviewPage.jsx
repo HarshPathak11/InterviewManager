@@ -4,7 +4,7 @@ import InterviewForm from '../components/InterviewForm/InterviewForm';
 
 const CreateInterviewPage = () => {
   return (
-    <div>
+    <div style={{paddingTop:'20px'}}>
       <InterviewForm />
     </div>
   );
