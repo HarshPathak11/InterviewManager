@@ -5,9 +5,15 @@ import { deleteInterview } from '../redux/interviewsSlice';
 import { Link } from 'react-router-dom';
 import Notification from '../components/Notification/Notification';
 import CalendarView from '../components/DashBoard/CalendarView';
+import Steps from '../components/Steps/Steps';
 
 const Container = styled.div`
   padding: 2rem;
+  min-height: 100vh;
+  @media (max-width: 768px) {
+    padding:0.5rem
+  }
+  
 `;
 
 const Filters = styled.div`
@@ -16,23 +22,23 @@ const Filters = styled.div`
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 1rem;
-  background: #ffffff; /* White background for contrast */
-  border: 1px solid #e0e0e0; /* Subtle border */
-  border-radius: 8px; /* Slightly rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  background: #ffffff; 
+  border: 1px solid #e0e0e0; 
+  border-radius: 8px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 
   select, input {
     padding: 0.75rem 1rem;
-    border: 1px solid #ddd; /* Lighter border for a sleek look */
-    border-radius: 6px; /* Rounded input fields */
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
     font-size: 1rem;
     color: #333;
-    background: #f9f9f9; /* Light grey background for inputs */
+    background: #f9f9f9; 
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
     &:focus {
-      border-color: #4a90e2; /* Blue border on focus */
-      box-shadow: 0 0 4px rgba(74, 144, 226, 0.6); /* Soft focus shadow */
+      border-color: #4a90e2; 
+      box-shadow: 0 0 4px rgba(74, 144, 226, 0.6); 
       outline: none;
     }
   }
@@ -41,13 +47,12 @@ const Filters = styled.div`
     flex-direction: column;
 
     select, input {
-      width: 100%; /* Full width on small screens */
+      width: 100%; 
     }
   }
 
-  /* Optional: Add hover effects for select and input */
   select:hover, input:hover {
-    border-color: #b3b3b3; /* Slightly darker border on hover */
+    border-color: #b3b3b3; 
   }
 `;
 
@@ -56,6 +61,7 @@ const InterviewList = styled.table`
   width: 100%;
   border-collapse: collapse;
   overflow-x: auto;
+  color:white;
 
   @media (max-width: 768px) {
     display: block;
@@ -70,11 +76,14 @@ const InterviewList = styled.table`
   }
 
   th {
-    background: #f4f6f8;
+    background:rgb(43, 57, 71);
   }
 
   tr:nth-child(even) {
-    background: #fafafa;
+    background:rgb(60, 74, 88);;
+  }
+  tr:nth-child(odd) {
+    background:rgb(94, 115, 136);;
   }
 `;
 
@@ -82,6 +91,8 @@ const Button = styled.button`
   background: ${props => props.delete ? '#e74c3c' : '#4a90e2'};
   color: #fff;
   border: none;
+  font-style:Jost;
+  font-weight: 800;
   padding: 0.5rem 1rem;
   margin-right: 0.5rem;
   border-radius: 4px;
@@ -154,9 +165,10 @@ const DashboardPage = () => {
       (filters.candidate ? i.candidateName.toLowerCase().includes(filters.candidate.toLowerCase()) : true)
     );
   });
+  // console.log(interviews)
 
   return (
-    <Container className='grainy-light'>
+    <Container className='grainy-dark'>
       {notification && (
         <Notification
           message={notification.message}
@@ -164,6 +176,7 @@ const DashboardPage = () => {
           onClose={() => setNotification(null)}
         />
       )}
+      <Steps view={view}/>
       <h2>Scheduled Interviews</h2>
       <ToggleButton
         active={view === "cal"}
@@ -215,7 +228,23 @@ const DashboardPage = () => {
                     <td>{interview.candidateName}</td>
                     <td>{interview.interviewerName}</td>
                     <td>{interview.date}</td>
-                    <td>{interview.timeSlot}</td>
+                    <td>{(() => {
+                      const startTime = interview.timeSlot;
+                      const durationMinutes = interview.duration;
+
+
+                      const [hours, minutes] = startTime.split(":").map(Number);
+
+
+                      const startDate = new Date();
+                      startDate.setHours(hours, minutes);
+
+                      const endDate = new Date(startDate.getTime() + durationMinutes * 60000);
+
+                      const endTime = endDate.toTimeString().slice(0, 5);
+
+                      return `${startTime} - ${endTime}`;
+                    })()}</td>
                     <td>{interview.interviewType}</td>
                     <td>
                       <Link to={`/edit/${interview.id}`}>

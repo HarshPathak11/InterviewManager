@@ -9,7 +9,7 @@ const Nav = styled.nav`
   width: 100%;
   height: 4.5rem;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(205, 205, 207, 0.75);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #e5e7eb;
   display: flex;

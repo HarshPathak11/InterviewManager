@@ -16,8 +16,32 @@ const CalendarContainer = styled.div`
   margin: 2rem auto;
 
   @media (max-width: 768px) {
-    margin: 1rem;
+    margin: 0.2rem;
+    .fc { 
+    font-size: 0.9rem; /* Adjust font size for smaller screens */
   }
+  .fc-toolbar {
+    flex-wrap: wrap; /* Allow toolbar to wrap on smaller screens */
+    justify-content: center;
+  }
+
+  .fc-toolbar-chunk {
+    margin-bottom: 0.5rem; /* Add spacing between wrapped toolbar elements */
+  }
+
+  .fc .fc-daygrid-day {
+    font-size: 0.75rem; /* Smaller font for day cells */
+  }
+
+  .fc .fc-timegrid-event {
+    font-size: 0.8rem; /* Smaller font for events */
+  }
+  .fc-header-toolbar {
+    flex-direction: column;
+    align-items: center;
+  }
+  }
+  
 `;
 
 const DetailsModalOverlay = styled.div`
@@ -68,25 +92,49 @@ const DetailsModal = ({ children, onClose }) => (
   </DetailsModalOverlay>
 );
 
+
 const CalendarView = () => {
   const dispatch = useDispatch();
   const interviews = useSelector(state => state.interviews.interviews);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [notification, setNotification] = useState(null); 
+  console.log(interviews);
 
   
-  const events = interviews.map(interview => ({
-    id: interview.id,
-    title: `${interview.candidateName} (${interview.interviewType})`,
-    start: `${interview.date}T${interview.timeSlot}`,
-    end: new Date(new Date(`${interview.date}T${interview.timeSlot}`).getTime() + 30 * 60000).toISOString(), 
-    extendedProps: {
-      interviewerName: interview.interviewerName,
-      candidateName: interview.candidateName,
-      interviewType: interview.interviewType,
-    },
-  }));
+  const events = interviews.map(interview => {
+    const startDateTimeString = `${interview.date}T${interview.timeSlot}`;
+    
+    // Debugging Logs
+    console.log('Start Date-Time String:', startDateTimeString);
+    console.log('Interview Duration:', interview.duration);
+    
+    const startDate = new Date(startDateTimeString);
+    console.log('Parsed Start Date:', startDate);
+    
+    const endTime = startDate.getTime() + interview.duration * 60000;
+    console.log('Calculated End Time (ms):', endTime);
+    
+    const endDate = new Date(endTime);
+    console.log('Parsed End Date:', endDate);
+    
+    const endISOString = endDate.toISOString();
+    console.log('End ISO String:', endISOString);
+    
+    return {
+      id: interview.id,
+      title: `${interview.candidateName} (${interview.interviewType})`,
+      start: startDate.toISOString(),
+      end: endISOString,
+      extendedProps: {
+        interviewerName: interview.interviewerName,
+        candidateName: interview.candidateName,
+        interviewType: interview.interviewType,
+        duration: interview.duration,
+      },
+    };
+  }).filter(event => event !== null); // Ensure no null events
+  
 
  
   const handleEventDrop = (info) => {
@@ -98,6 +146,7 @@ const CalendarView = () => {
       interviewType: event.extendedProps.interviewType,
       date: event.start.toISOString().split('T')[0],
       timeSlot: event.start.toTimeString().split(':').slice(0, 2).join(':'),
+      duration: event.extendedProps.duration, // Retain the original duration
     };
 
     
@@ -162,6 +211,7 @@ const CalendarView = () => {
           <p><strong>Type:</strong> {selectedEvent.extendedProps.interviewType}</p>
           <p><strong>Date:</strong> {selectedEvent.start.toISOString().split('T')[0]}</p>
           <p><strong>Time:</strong> {selectedEvent.start.toTimeString().split(':').slice(0, 2).join(':')}</p>
+          <p><strong>Duration:</strong> {selectedEvent.extendedProps.duration} minutes</p>
           <button onClick={closeDetails}>Close</button>
           <Link to={`/edit/${selectedEvent.id}`}>
             <button>Edit</button>
