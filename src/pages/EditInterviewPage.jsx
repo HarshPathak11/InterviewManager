@@ -4,7 +4,7 @@ import InterviewForm from '../components/InterviewForm/InterviewForm';
 
 const EditInterviewPage = () => {
   return (
-    <div>
+    <div style={{paddingTop:'20px'}}>
       <InterviewForm isEdit />
     </div>
   );

@@ -113,9 +113,9 @@ const Navbar = () => {
           <div></div>
         </Hamburger>
         <NavLinks isOpen={isOpen}>
-          {isAdmin && <Link to="/admin">Dashboard</Link>}
           <Link to="/">Dashboard</Link>
           <Link to="/create">Schedule Interview</Link>
+          {<Link to="/email">Email History</Link>}
         </NavLinks>
       </NavContainer>
     </Nav>

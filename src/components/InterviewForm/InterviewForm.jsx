@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { validateInterview } from '../../utils/validation';
 import Notification from '../Notification/Notification';
 import { INTERVIEW_DURATION_MINUTES } from '../../constants';
+import { sendNotification } from '../../utils/mockNotificationService';
 const Container = styled.div`
   display: flex;
   height: 100vh;
@@ -176,6 +177,18 @@ const InterviewForm = ({ isEdit = false }) => {
       dispatch(addInterview(interviewData));
       setNotification({ message: 'Interview scheduled successfully!', type: 'success' });
     }
+    sendNotification({
+      recipientName: interviewData.candidateName,
+      recipientEmail: `${interviewData.candidateName.toLowerCase()}@example.com`,
+      notificationType: `${isEdit?'Interview Updated':'Interview Scheduled'}`,
+      interviewData: {
+        date: interviewData.date,
+        timeSlot: interviewData.timeSlot,
+        duration: interviewData.duration,
+        interviewerName: interviewData.interviewerName,
+        interviewType: interviewData.interviewType,
+      },
+    });
 
     // Navigate back to dashboard after a short delay to allow the notification to display
     setTimeout(() => {

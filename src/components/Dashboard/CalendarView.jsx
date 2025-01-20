@@ -10,6 +10,7 @@ import { updateInterview } from '../../redux/interviewsSlice';
 import { validateInterview } from '../../utils/validation';
 import { Link } from 'react-router-dom';
 import Notification from '../Notification/Notification';
+import { sendNotification } from '../../utils/mockNotificationService';
 
 const CalendarContainer = styled.div`
   max-width: 1000px;
@@ -166,6 +167,19 @@ const CalendarView = () => {
     }
 
     dispatch(updateInterview(updatedInterview));
+
+    sendNotification({
+          recipientName: updatedInterview.candidateName,
+          recipientEmail: `${updatedInterview.candidateName.toLowerCase()}@example.com`,
+          notificationType: 'Interview Updated',
+          interviewData: {
+            date: updatedInterview.date,
+            timeSlot: updatedInterview.timeSlot,
+            duration: updatedInterview.duration,
+            interviewerName: updatedInterview.interviewerName,
+            interviewType: updatedInterview.interviewType,
+          },
+        });
 
     
     setNotification({ message: 'Interview rescheduled successfully!', type: 'success' });
