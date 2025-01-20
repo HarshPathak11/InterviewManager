@@ -22,7 +22,7 @@ const NotificationContainer = styled.div`
 `;
 
 const Notification = ({ message, type, onClose }) => {
-  console.log("sdgdsg")
+
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();

@@ -100,27 +100,24 @@ const CalendarView = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const [notification, setNotification] = useState(null); 
-  console.log(interviews);
+
 
   
   const events = interviews.map(interview => {
     const startDateTimeString = `${interview.date}T${interview.timeSlot}`;
-    
-    // Debugging Logs
-    console.log('Start Date-Time String:', startDateTimeString);
-    console.log('Interview Duration:', interview.duration);
+
     
     const startDate = new Date(startDateTimeString);
-    console.log('Parsed Start Date:', startDate);
+  
     
     const endTime = startDate.getTime() + interview.duration * 60000;
-    console.log('Calculated End Time (ms):', endTime);
+   
     
     const endDate = new Date(endTime);
-    console.log('Parsed End Date:', endDate);
+   
     
     const endISOString = endDate.toISOString();
-    console.log('End ISO String:', endISOString);
+  
     
     return {
       id: interview.id,

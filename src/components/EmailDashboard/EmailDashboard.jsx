@@ -1,41 +1,4 @@
-// import React, { useEffect, useState } from 'react';
-// import { getNotifications } from '../../utils/mockNotificationService';
 
-// const EmailDashboard = () => {
-//   const [notifications, setNotifications] = useState([]);
-
-//   useEffect(() => {
-//     // Fetch notifications when the component mounts
-//     setNotifications(getNotifications());
-//   }, []);
-
-//   return (
-//     <div style={{ padding: '20px' }}>
-//       <h2>Notification Dashboard</h2>
-//       {notifications.length === 0 ? (
-//         <p>No notifications to show.</p>
-//       ) : (
-//         <ul>
-//           {notifications.map((notification) => (
-//             <li key={notification.id} style={{ marginBottom: '15px' }}>
-//               <p><strong>Type:</strong> {notification.notificationType}</p>
-//               <p><strong>To:</strong> {notification.recipientName} ({notification.recipientEmail})</p>
-//               <p><strong>Details:</strong></p>
-//               <ul>
-//                 <li><strong>Date : </strong>{notification.interviewData.date}</li>
-//                 <li><strong>Start Time : </strong>{notification.interviewData.timeSlot}</li>
-//                 <li><strong>Duration : </strong>{notification.interviewData.duration}</li>
-//                 <li><strong>Interviewer : </strong>{notification.interviewData.interviewerName}</li>
-//                 <li><strong>Type : </strong>{notification.interviewData.interviewType}</li>
-//               </ul>
-//               <p><strong>Timestamp:</strong> {new Date(notification.timestamp).toLocaleString()}</p>
-//             </li>
-//           ))}
-//         </ul>
-//       )}
-//     </div>
-//   );
-// };
 
 // export default EmailDashboard;
 import React, { useEffect, useState } from 'react';

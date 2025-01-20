@@ -1,68 +1,20 @@
-// // src/utils/validation.js
-// export const validateInterview = (formData, interviews, isEdit) => {
-//     const errors = {};
-//     const { candidateName, interviewerName, date, timeSlot } = formData;
-  
- 
-//     const interviewerConflict = interviews.find(i => 
-//       i.interviewerName === interviewerName &&
-//       i.date === date &&
-//       i.timeSlot === timeSlot &&
-//       (!isEdit || i.id !== formData.id)
-//     );
-  
-//     if (interviewerConflict) {
-//       errors.interviewerName = 'Interviewer is already booked for this time slot.';
-//     }
-  
-  
-//     const candidateConflict = interviews.find(i => 
-//       i.candidateName === candidateName &&
-//       i.date === date &&
-//       i.timeSlot === timeSlot &&
-//       (!isEdit || i.id !== formData.id)
-//     );
-  
-//     if (candidateConflict) {
-//       errors.candidateName = 'Candidate already has an interview at this time.';
-//     }
-  
-//     return errors;
-//   };
+
   
 // src/utils/validation.js
 
 import { INTERVIEW_DURATION_MINUTES, OPERATIONAL_START_HOUR, OPERATIONAL_END_HOUR } from '../constants';
 
-/**
- * Converts a date and time string to a JavaScript Date object.
- * @param {string} date - The date in 'YYYY-MM-DD' format.
- * @param {string} time - The time in 'HH:mm' format.
- * @returns {Date} - The corresponding Date object.
- */
+
 const getDateTime = (date, time) => {
   return new Date(`${date}T${time}`);
 };
 
-/**
- * Checks if two time intervals overlap.
- * @param {Date} start1 - Start time of the first interval.
- * @param {Date} end1 - End time of the first interval.
- * @param {Date} start2 - Start time of the second interval.
- * @param {Date} end2 - End time of the second interval.
- * @returns {boolean} - True if intervals overlap, else false.
- */
+
 const isOverlapping = (start1, end1, start2, end2) => {
   return start1 < end2 && start2 < end1;
 };
 
-/**
- * Validates an interview for scheduling conflicts and operational hours.
- * @param {Object} formData - The interview data to validate.
- * @param {Array} interviews - Existing interviews to check against.
- * @param {boolean} isEdit - Whether this is an edit operation.
- * @returns {Object} - An object containing validation error messages.
- */
+
 export const validateInterview = (formData, interviews, isEdit) => {
   const errors = {};
   const { id, candidateName, interviewerName, date, timeSlot, duration } = formData;

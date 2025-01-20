@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { deleteInterview } from '../redux/interviewsSlice';
 import { Link } from 'react-router-dom';
 import Notification from '../components/Notification/Notification';
-import CalendarView from '../components/DashBoard/CalendarView';
+import CalendarView from '../components/Calender/CalendarView';
 import Steps from '../components/Steps/Steps';
 
 const Container = styled.div`
@@ -165,7 +165,7 @@ const DashboardPage = () => {
       (filters.candidate ? i.candidateName.toLowerCase().includes(filters.candidate.toLowerCase()) : true)
     );
   });
-  // console.log(interviews)
+ 
 
   return (
     <Container className='grainy-dark'>
